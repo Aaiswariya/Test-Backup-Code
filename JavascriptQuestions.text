@@ -1,0 +1,604 @@
+1. What are the different data types present in JavaScript?
+
+    Primitive - (string, boolean, number , null , symbol, BigInt , undefined), Non Primitive- Object
+    Primitive data Types are used to store single value amd non primitive data types are collection of data in an ordered list  {
+        name:''
+        age:''
+        profession:''
+    }
+2. Explain var, let, and const differences.
+    var - function/global scope variable, can be reassigned , can be accessed anywhere in the function. Hoisted to the top of the code 
+
+    Both let and const can be hoisted but not initialized because the variable cannot be referenced before declaration otherwise
+    it will get an reference error i.e 'found in the Temporal Dead zone' 
+    let - block scoped variable , can be reassigned
+
+    const - block scope variable which cannot be reassigned . 
+
+    Temporal Dead Zone - The zone or the time which is when the variable gets referenced to the time the variable gets declared.
+
+3. What is hoisting in JavaScript?
+    The is a JavaScript mechanism where all the variables and function declarations are move to the
+    top of the scope while compilation phase . This means we can use the variable and function before they are declared 
+
+    Variable hoisting - They can be accessed before initialization 
+    Function hoisting - The function can be accessed before it is defined .
+
+    Let and const can be hosited but cannot be accessed before initialization
+    so if they get accessed we get a reference err i.e Temporal Dead Zone
+    If a function is assigned to  variable(function expression) then also it will be able to access before initialization 
+
+4. What is a closure, and how is it used?
+    Closure in Javascript is a function that retains the access to the lexical scope even when it is executed outside the scope.
+    It means it can access the variables of the outer function at the time of creation even when the outer function is executed. 
+    It maintains Private variable which cannot be accessed outside the outer function.
+    Also in closure the innerfunction can access the outer variable inside the outer function
+    even when the outer function has been executed. 
+
+    Eg: const outerFunc = () => {
+        let outerVar = 0; // This is a variable in the outer function's scope
+
+        const innerFunction = () => { // Declare innerFunction with const
+        outerVar++; // The inner function can access and modify outerVar
+        return outerVar; // It returns the updated value of outerVar
+    }
+
+    return innerFunction; // Return the inner function
+}
+    const increment = outerFunc(); // Call outerFunc to get the inner function
+
+    console.log(increment()); // Output: 1 (outerVar is incremented to 1)
+    console.log(increment()); // Output: 2 (outerVar is incremented to 2)
+    console.log(increment()); // Output: 3 (outerVar is incremented to 3)
+
+5. Explain the difference between == and ===.
+    Both are used for comparision but one of them is use to compare values and one is used to compare value and types
+   ' == '  --- Used to compare only values 
+   ' === ' --- Used to compare values and types
+
+
+6. What are arrow functions, and how do they differ from regular functions?
+    short hand rep of function introduced as a part of Es6 features .
+    eg const arrowFunction =() =>{
+        return 'test'
+    }
+    If a function is single line then return keyword is also not required.
+
+7. What is the event loop in JavaScript?
+    Important concept in JS , which allows nonblocking and asynchronous programming
+    of the code such as user interaction , network reqs and all other functionality without freezing the main thread.
+
+    1. When JS function is executed then a call stack is created where once the line is executed then it is popped of the stack, 
+       Java script believes in synchronous execution which means execution of code ine line after the other. 
+    2. If there is any browser related functionality such as timer functions i.e settimeOut , set Interval ,
+       http request then it is handed over to the Web api.
+    3. Once the web api completes the asynchronous programming then it adds the functionality to the callback queue , 
+       the call back queue consist of all the asynchronous programming that needs to be executed one by one once the 
+       call stack is empty.
+    4. Event loop regularly checks the call stack , once it is empty it pushed the
+       first callback function from the call back queue to the call stack for execution
+    5. After call stack is empty all the microtask queues are completed such as promises , microqueuetask etc
+       and then after that macroqueue tasks are completed one by one i.e settimeouts , setInterval , setImmediate etc.
+
+
+8. What are promises and how do they work?
+   Promises are the Advanced version of handling asynchronous operations instead callback functionality . 
+   It represents an object of both the resolved value and the error if the operation fails.
+    const promise = new Promise((resolve, reject) => {
+        const success = true; 
+        if(success){
+            resolve('Successful')
+        }else{
+            reject('Failed')
+        }
+    })
+    promise.then((res)=> {
+        console.log(res) //'Successful'
+    }).catch((err)=>{
+        console.log(err)// Failed
+    })
+    Three states of Promise : 
+        Pending : this is the state when the promise is getting executed.
+        Fullfilled: When the operation is successful and the resolved value is obtained
+        Rejected : When the operation failse and it return the reason of failure i.e error
+
+    Promise chaining : -It allows the user to handle multiple promises allowing to
+                        execute multiple asynchronous operation in a sequence . Each (.then) will return
+                        a new promise allowing the further chaining of promised
+    Promise.all () : It takes an array of promises together and .all() allows to combine all the promise
+                     and resolve it to a single value res once all the promises are resolved.
+                     Eg: const promise1 = Promise.resolve(3);
+                         const promise2 = new Promise(resolve, reject => {
+                            settimeOut(resolve, 100, 'test')
+                        })
+                        const promise3 = Promise.resolve(3)
+    Promise.all([promise1,promise2,promise3]).then(vals => {
+                    console.log(vals) // [42,'test',3]
+    }).catch(err => comsole.log(err))
+
+
+
+    Promise.race : Takes an array of promises and returns a resolved value if one of promises is resolved./
+                   Eg: const promise1 = new Promise(resolve,reject => {
+                    setTimeout(resolve, 500 , 'test')
+                   })
+                   const promise2 = new Promise(resolve,reject => {
+                    setTimeout(resolve, 100 , 'test1')
+                   })
+    Promise.rac([promise1, promise2]).then(value => {console.log(value) //test1 })
+
+
+9. Explain async/await with an example.
+    async- keyword in Js to define a function i.e asynchronous.
+           It notifies the user that the function will return the promise and it makes the asynchronous function look synchronous
+    await - this keyword is used inside the function so that it will pause the execution till the promise is resolved/rejected
+
+10. What is the difference between synchronous and asynchronous code?
+synchronous : It means line by line execution of the code. it means one line waits for the
+              previous task to get completed before execution. Causes blocking code.
+              Eg: File reading
+             
+             
+
+asynchronous: Non blocking way of execution of code i.e the tasks are performed irrespective of each other independently. 
+              It means it can start one task and if it takes time for execution then it can move on to the other task causing
+              non blocking execution. Eg: API call.
+              
+
+11. What is the prototype chain?
+
+12. How does JavaScript handle scope?
+    scope refers to the visibility and accessibility of variables, functions, and objects in
+    different parts of your code. 
+
+    Global Scope: Declared at the starting , can be accessed from anywhere in the function.
+    Block Scope- Introduced in 2015(Es6) - let and const can be accessed within the block .
+    Function scope : Introduced in 2015(Es6) - let and const can be  inside the function .
+    lexical scope: Its the scope that is available by its location in the source code.
+                   Inner functions have access to variables declared in their outer (enclosing) functions..
+    Scope Chain : if a variable is declared outside function  and used inside the function/block then it will
+                  first check for the values assigned to it inside the block/function and then if it  
+                  doesn't find any value assigned then it will move to global scope.
+
+13. What is the difference between null and undefined? 
+    undefined - Indicates that a variable has been declared but has not been assigned a value. 
+                It can also indicate the absence of a return value from a function or a missing property in an object.
+
+    null: Represents an intentional absence of any object value. It is 
+          explicitly assigned to indicate that a variable should have no value.
+
+14. What is event delegation?
+    Event delegation is a powerful technique in JavaScript that allows you to manage events more efficiently 
+    by leveraging the concept of event bubbling. 
+    Instead of attaching event listeners to individual elements, you attach a single event listener to a parent element. 
+    This parent element listens for events that bubble up from its child elements, allowing you to handle events for 
+    multiple child elements with a single listener
+
+15. Explain the concept of this keyword in JavaScript.
+    In JavaScript, the this keyword refers to the context in which a function is called. It is used to refer to the
+    object that is executing the current piece of code.
+
+    The value of this can change depending on how the function is called. Here are the different scenarios where this behaves differently:
+
+    Global context: In non-strict mode, this refers to the global object (window in browsers).
+    Object method: this refers to the object the method belongs to.
+    Constructor function: this refers to the instance of the object being created.
+    Arrow functions: In arrow functions, this is lexically bound to the surrounding context
+
+16. How does call(), apply(), and bind() work?
+    Call()
+        Invokes a function immediately with a specified this value and arguments passed individually.
+        Syntax: functionName.call(thisArg, arg1, arg2, ...)
+    Apply()
+        Invokes a function immediately with a specified this value and arguments passed as an array.
+        Syntax: functionName.apply(thisArg, [arg1, arg2, ...])
+    Bind() 
+        Creates a new function with a specified this value and optional pre-set arguments.
+        Returns a new function that can be invoked later.
+        Syntax: functionName.bind(thisArg, arg1, arg2, ...)
+    Key Differences
+        Invocation:
+        call() and apply() execute the function immediately, while bind() returns a new function for later execution.
+        Arguments:
+        call() accepts arguments individually, while apply() takes them as an array. 
+        Use Cases:
+        call() and apply() are used for immediate function invocation with context manipulation.
+        bind() is used for creating new functions with a fixed context, useful for event handlers or callbacks.
+
+17. What is the difference between function declaration and function expression?
+
+    Function Declaration :
+        A function declaration is a statement that defines a function with a specified name.
+        It is hoisted, meaning it can be called before it is declared in the code.
+        It must have a name.
+        It is processed before any code is executed.
+        It is visible everywhere in the block.
+        It does not require a variable assignment.
+    Function Expression
+        A function expression is a way to define a function as part of an expression.
+        It is not hoisted, meaning it cannot be called before it is defined in the code.
+        It can be anonymous (without a name) or named.
+        It is loaded and executed when the program interpreter reaches the line of code. 
+        It can be stored in a variable assignment.
+        It can be self-invoking
+
+
+18. What are JavaScript modules?
+
+    Modularity:
+            Modules allow developers to break down large programs into smaller, more manageable pieces of code, each with a specific purpose.
+    Encapsulation:
+            Modules can encapsulate code, hiding internal implementation details and exposing only necessary functionalities.
+    Reusability:
+            Modules can be easily reused in different parts of an application or even in other projects, reducing code duplication.
+    Import/Export:
+            Modules use import and export statements to share code between files.
+    File-Based:
+            In JavaScript, a module is typically a single file containing related code.
+    Benefits of using modules:
+        Improved Code Organization: Modules help to structure code logically, making it easier to navigate and understand.
+        Reduced Code Duplication: By reusing modules, developers can avoid writing the same code multiple times.
+        Enhanced Maintainability: Smaller, self-contained modules are easier to maintain and modify.
+        Increased Reusability: Modules can be reused across different projects, saving time and effort.
+        Better Collaboration: Modules facilitate collaboration among developers by enabling them to work on different parts of an application concurrently.
+        Type
+
+19. How do you handle errors in JavaScript?
+    The try block encloses code that might throw an error. 
+    If an error occurs within the try block, the execution stops, and control jumps to the catch block.
+    The catch block handles the error, typically by logging it or displaying a user-friendly message.
+    An optional finally block executes regardless of whether an error occurred. 
+    It's often used for cleanup tasks like closing files or releasing resources. 
+
+20. What is the difference between shallow copy and deep copy?
+        Shallow Copy:
+                Only the top-level structure is duplicated. 
+                Nested objects are copied by reference, meaning both the original and the copy point to the same underlying objects in memory. 
+                If you modify a nested object in the copy, it will also be reflected in the original object and vice versa. 
+                Shallow copy is generally faster and more memory-efficient. 
+        Deep Copy:
+                Creates an entirely new object, including all nested objects. 
+                All nested objects are recursively copied, so the copy has its own separate memory 
+                locations for all data, including nested objects. 
+                Changes in the copy will not affect the original object, and vice versa. 
+                Deep copy is slower and requires more memory. 
+        When to use each:
+            Shallow copy:
+                Suitable for simple data structures or when you want to intentionally share references to nested objects. 
+            Deep copy:
+                Necessary when you need the copies to be completely independent of each other, 
+                especially for deeply nested objects or when immutability is crucial. 
+
+21. What is a callback function?
+        A callback function in programming is a function passed as an argument to another function, 
+        to be "called back" at a later time,  often after the completion of some operation or event.
+        This allows for asynchronous programming, event handling, and code modularity. 
+
+22. How can you prevent default behavior in event handling?
+        The preventDefault() method is used to prevent the default behavior of an event in JavaScript. 
+        When specific events like form submissions or link clicks occur, the browser performs default 
+        actions such as refreshing the page or navigating to a new URL. The preventDefault() method 
+        intercepts and overrides these default actions, giving more control over how the application 
+        responds to user interactions.
+
+
+23. What are template literals?
+    Template literals are literals delimited with backtick (`) characters, allowing for multi-line strings, 
+    string interpolation with embedded expressions, and special constructs called tagged templates.
+
+    Template literals are sometimes informally called template strings, because they are used most commonly 
+    for string interpolation (to create strings by doing substitution of placeholders). However, a tagged 
+    template literal may not result in a string; it can be used with a custom tag function to perform 
+    whatever operations you want on the different parts of the template literal.
+
+24. Explain the difference between for...in and for...of loops.
+
+25. What is the difference between map(), filter(), and reduce()?
+    The map() method is used for creating a new array from an existing one, 
+    applying a function to each one of the elements of the first array.
+
+    In the callback, only the array element is required. Usually some action 
+    is performed on the value and then a new value is returned.
+
+    The filter() method takes each element in an array and it applies a conditional statement against it. 
+    If this conditional returns true, the element gets pushed to the output array. If the condition returns 
+    false, the element does not get pushed to the output array.
+
+
+    The reduce() method reduces an array of values down to just one value. 
+    To get the output value, it runs a reducer function on each element of the array.
+    The callback argument is a function that will be called once for every item in the array. 
+    This function takes four arguments, but often only the first two are used.
+
+    accumulator - the returned value of the previous iteration
+    currentValue - the current item in the array
+    index - the index of the current item
+    array - the original array on which reduce was called
+    The initialValue argument is optional. If provided, it will be used as the initial 
+    accumulator value in the first call to the callback function.
+
+26. How do you manipulate the DOM in JavaScript?
+
+    DOM manipulation in JavaScript involves using the Document Object Model (DOM) API to 
+    interact with and modify the structure, style, and content of a web page. Here's a breakdown of common techniques:
+
+    getElementById(): Retrieves a single element by its unique ID.
+
+    getElementsByClassName(): Returns a collection of elements with a specific class name.
+
+    getElementsByTagName(): Returns a collection of elements with a specific tag name.
+
+27. What is debouncing and throttling?
+
+    Debouncing and throttling are techniques used to optimize performance by limiting the 
+    frequency of function executions in response to events like scrolling or resizing.
+
+    Debouncing ensures that a function is only executed after a certain amount of idle time, i.e., 
+    it delays the execution until the event stops triggering for a specified time (e.g., for search input).
+
+    Throttling limits the number of times a function can be executed in a given period, ensuring 
+    it runs at regular intervals (e.g., during scroll or window resizing).
+
+
+// explain for in and for of loop
+
+for in loop : iterates over the kep in the object /array and return string values based on the key/indexes 
+
+const person =  { name: 'alice', age: '23', gender:'female}
+ for (let key in person){
+    console.log('test key', person[key])// name:alice
+    //age:25 
+    //gender: female
+ }
+ const fruits = [ apple,banana, orange]
+ for(let index in fruits){
+    console.log('test index', index) 
+    //0
+    // 1
+    //2
+
+ }
+ for of loop : iterates over the values of iterable elements
+    for(let fruit of fruits){
+        console.log('test', fruit)
+        // applied//banana //orange
+    }
+28. Explain the difference between synchronous and asynchronous iteration.
+
+    Synchronous Iteration
+        Operations happen sequentially, one after the other.
+        The program waits for each operation to finish before moving to the next.
+        Simple to understand and implement, but can lead to performance bottlenecks when dealing with time-consuming tasks.
+        Can cause UI freezes in applications if long-running tasks are performed synchronously.
+        Suitable for simple operations that don't involve waiting for external resources.
+    Asynchronous Iteration
+        Operations can start and run concurrently without blocking the program's main thread.
+        The program doesn't wait for each operation to complete before continuing.
+        Uses callbacks, promises, or async/await to handle the results of asynchronous operations.
+        Improves performance and responsiveness by allowing the program to perform other tasks while waiting for longer operations to complete.
+        Ideal for operations like network requests, file handling, or database queries.
+        More complex to implement but provides a better user experience for tasks that take time to complete.
+
+29. What are generators in JavaScript?
+
+30. How does garbage collection work in JavaScript?
+ mark and sweep algorithm
+
+31. What are symbols in JavaScript?
+
+    Because symbols are the only primitive data type that has reference identity (that is, you cannot create the same symbol twice), 
+    they behave like objects in some way
+
+32. Explain the difference between setTimeout() and setInterval().
+
+    setTimeout(): 
+        Executes a function or code snippet once after the specified delay (in milliseconds).
+        Ideal for tasks that need to be performed only once after a delay, such as displaying a 
+        message after a few seconds or delaying an animation.
+        Can be used recursively to create a sequence of timed actions.
+    setInterval():
+        Executes a function or code snippet repeatedly at the specified interval (in milliseconds).
+        Suitable fotimer, or polling a server for updates.
+        Can be stopr tasks that need to be performed continuously with a fixed delay, such as animations, 
+        updating a ped using clearInterval() to prevent further executions.
+    Key Differences:
+        Execution: setTimeout() executes once, while setInterval() executes repeatedly.
+        Use Cases: setTimeout() is for one-time delays, while setInterval() is for recurring tasks. 
+        Control: setInterval() requires clearInterval() to stop, while setTimeout() automatically stops after execution.
+
+33. What is event bubbling and event capturing?
+
+    Event Bubbling: When an event occurs on an element, it first triggers the event on that element, 
+                    and then it bubbles up to its parent elements. This means that the event can be captured and 
+                    handled at any level of the DOM hierarchy.
+
+    Single Event Listener: By attaching an event listener to a parent element, 
+                           you can handle events for all of its child elements. This reduces the number
+                           of event listeners in your application, leading to better performance and easier maintenance.
+
+    Event Capturing: Event capturing is a useful feature in JavaScript that allows you to handle events as they propagate 
+                     down the DOM tree. By using event capturing, you can manage events in a different order than the default
+                     bubbling behavior. This can be particularly useful in scenarios where you want to intercept events 
+                     before they reach specific elements. Understanding both event capturing and bubbling is essential 
+                     for effective event handling in web applications.
+
+34. How can you create private variables in JavaScript?
+   
+    Using Closures
+            How it works: By defining a variable within a function's scope, and then returning an object with 
+            methods that can access this variable. The variable is not directly accessible from outside the function, 
+            effectively making it private.
+
+35. What is the difference between Object.freeze() and Object.seal()?
+
+36. How do you optimize JavaScript performance? 
+
+    Event delegation and event bubbling
+
+37. What are the new features introduced in ES6?
+    arrow functions
+    let and const 
+
+38. What is the purpose of the new keyword?
+
+    The new keyword in JavaScript is used to create an instance of a user-defined object type or one of the 
+    built-in object types that has a constructor function
+
+39. What is the difference between a class and a prototype?
+
+    A class acts as a blueprint for creating objects. It defines the properties and methods that objects of that class will have.
+        Constructor:
+            Classes have a constructor method that is automatically called when a new object of the class is created. 
+            This is where you typically initialize the object's properties.
+        Inheritance:
+            Classes support inheritance using the extends keyword, allowing you to create subclasses that inherit from parent classes.
+        Encapsulation:
+            Classes promote encapsulation by grouping data (properties) and methods that operate on that data 
+            within the class definition
+
+    Prototypes are the underlying mechanism in JavaScript for implementing inheritance. Every object in JavaScript has a prototype, 
+    which is another object that it inherits properties and methods from.
+
+40. Explain how the spread operator works.
+   
+   The spread operator, denoted by three dots (...), is a feature in JavaScript that expands an iterable, 
+   such as an array, string, or object, into individual elements. This allows for more concise and readable 
+   code when performing operations like copying, combining, or passing arguments to functions. 
+
+   Arrays: When applied to an array, the spread operator unpacks its elements into a new array or function call.
+            const arr1 = [1, 2, 3];
+            const arr2 = [...arr1, 4, 5]; // arr2 becomes [1, 2, 3, 4, 5]
+
+   When applied to a string, the spread operator transforms it into an array of individual characters.
+            const str = "hello";
+            const chars = [...str]; // chars becomes ['h', 'e', 'l', 'l', 'o']
+
+
+   Objects: When applied to an object, the spread operator copies its properties into a new object.
+              const obj1 = { a: 1, b: 2 };
+              const obj2 = { ...obj1, c: 3 }; // obj2 becomes { a: 1, b: 2, c: 3 }
+
+41. Explain how the rest operator works.
+
+    The rest operator, denoted by three dots (...), is used to gather the remaining elements of an 
+    array or the remaining properties of an object into a new array or object. It is commonly used in 
+    function parameters, array destructuring, and object destructuring. 
+    Function Parameters:
+    When used in a function parameter list, the rest operator allows a function to accept an indefinite 
+    number of arguments as an array.
+
+    Collects Elements: The rest operator gathers multiple elements or properties into a single array or object.
+    Last Parameter: In function parameters, the rest parameter must be the last parameter in the list. 
+    One Rest Parameter: A function definition can only have one rest parameter.
+    Opposite of Spread: It is the opposite of the spread operator, which expands elements.
+
+
+    -------------------------------------------------------------------------------------------------
+
+    function print() {
+    console.log("start");
+    sleep(1000);
+    console.log("end");
+    sleep(1000);
+    console.log("done");
+} write a sleep function so that after start end prints after 1000 miliseconds and done after another 1000 miliseconds 
+Ans : 
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function print() {
+    console.log("start");
+    await sleep(1000); // Wait for 1000 milliseconds
+    console.log("end");
+    await sleep(1000); // Wait for another 1000 milliseconds
+    console.log("done");
+}
+
+print();
+---------------------------------------
+Different types of copy 
+const arr= [1,2,[3,4,5],6]
+const copyArr =arr // just passing the ref and any change in copyArr will lead to change in org arr.
+
+const copyArr = [...arr] // shallow copy which means it will not copy the nested array it will just pass the ref for nested array
+how to access element in nested array . eg : copyArr[2].push(5)
+const copyArr = JSON.parse(JSON.stringify(arr)) // deep copy  it means it wont modify the original array if any change in the copy arr is done . 
+-------------------------------------------------------------------------
+In JS we can combine map and filter and in order to achieve that flatMap(). 
+
+Eg: 
+conts arr = [1,2,3,4,5,6]
+
+arr.filter((x) => x%2 ===0).map((y)=> y*y)
+Alternative option : 
+
+arra.flatMap((x) => x%2 ===0 ? x*x : [])
+-----------------------------------------------
+keyUp, keyDown and keyPress and use to handle the keyboard interactions in JS
+ 
+ keyUp - used to capture the event after the key is pressed and released , used to capture and do any functionality after the key is pressed .Eg : search functionality
+ keyPress: depreciated version use to capture/ detect the key which is pressed .
+
+ keyDown - It is the new version of keyPress , used to dectect all the key presses and capture 
+ the key pressed to handle the functioanlity. It use to capture character input.
+-------------------------------------------------------------------------------
+How to calculate the no of occurrence in a string
+const str = ''
+    for(let x of str){
+        if(obj[x]){
+            obj[x] =+1
+        }else{
+            obj[x]=1
+        }
+    }
+-----------------------------------------------------------------------------
+const str = 'Hello World
+const subStr= 'lo'
+
+//to check if exists 
+    str.includes(subStr) // true 
+
+// to check where 
+    str.indexOf(subStr) //3
+
+// to check if multiple occurrence is there.
+    str.split(subStr).length - 1
+
+
+--------------------------------------------------------------------------
+Scenario 1
+
+How to differenciate between userClick and script click in javascript ? 
+ When an event function is attached to a event listener then and event object is created and it has some values in it. 
+ The isTrusted attribute of the event object is 'true' whenever an user clicks the button and it is 'false' whenever script clciking is done.
+
+Scenario 2
+
+Whenever inside a form element a button is created then it 
+by default considers it as a submit button and due to this behavior the submitted value is saved and available in the url of the page.
+
+And if we explicitly add a type to the button then it wont act as a submit button because we manipulated the browser default behavior.
+
+
+Scenario 3 
+
+To close the modal dialog box on click of 'Esc' key we need to use the 'keyDown' for doing that .
+
+
+Scenario 4
+
+If we use div as a button , then to make it accessible from keyboard we need to add tabIndex= 0 , to make to trigger through 
+enter button we need to add onKeyDown and inside that we need to check e.key ===' enter' then add or function and also make 
+it visible to user but adding the role as 'button' and also need to add a label using aria-label="Some text"
+
+
+Scenario 5
+
+If there is single input element inside a form element and there is no submit button then if we click on 
+the Enter button the form will be submitted as this a default browser behavior. And if there more than 
+one input element inside the form then enter wont work it will require a submit button and once it is
+added then enter at any input field will submit the values
+
